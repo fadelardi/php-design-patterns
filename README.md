@@ -164,7 +164,7 @@ class CoastalVillage implements StrategicPoint
       }
     }
 }
-``
+```
 
 ...and the different watchtowers. 
 
@@ -185,7 +185,9 @@ class BellWatchtower implements Watchtower
   }
 }
 ```
+
 Finally, let's see how they would respond if they saw incoming boats. 
+
 
 ```php
 $coastalVillage1 = new CoastalVillage();
@@ -193,5 +195,4 @@ $coastalVillage1->addWatchtower(new HornWatchtower());
 $coastalVillage1->addWatchtower(new BellWatchtower());
 $coastalVillage1->callForAlarm('I see ten boats');
 ```
-
 
