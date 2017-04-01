@@ -195,4 +195,76 @@ $coastalVillage1->addWatchtower(new HornWatchtower());
 $coastalVillage1->addWatchtower(new BellWatchtower());
 $coastalVillage1->callForAlarm('I see ten boats');
 ```
+## Strategy
+
+Eventually the kingdom does get invaded. Good thing the King prepared. His commander is leading the army, mainly composed on infantrymen and archers. 
+
+```php
+$army = [
+  ['helmet' => 'red', 'name' => 'INF1'],
+  ['helmet' => 'red', 'name' => 'INF2'],
+  ['helmet' => 'red', 'name' => 'INF3'],
+  ['helmet' => 'red', 'name' => 'INF4'],
+  ['helmet' => 'blue', 'name' => 'ARC1'],
+  ['helmet' => 'blue', 'name' => 'ARC2'],
+];
+```
+
+However, he might alternate which he would like to call forward. He needs to be able to tell them apart, and he does so by the color of their helmets. 
+
+```php
+interface Summon
+{
+  public function get($soldier);
+}
+
+class SummonInfantry implements Summon
+{
+  public function get($soldier)
+  {
+    return $soldier['helmet'] == 'red';
+  }
+}
+
+class SummonArchers implements Summon
+{
+  public function get($soldier)
+  {
+    return $soldier['helmet'] == 'blue';
+  }
+}
+```
+
+Let's see the commander in action.
+
+```php
+class Commander
+{
+  private $army = [];
+
+  public function __construct($army)
+  {
+    $this->army = $army;
+  }
+
+  public function get($type)
+  {
+    $soldiers = [];
+    foreach ($this->army as $soldier) {
+      if ($type->get($soldier)) {
+        $soldiers[] = $soldier;
+      }
+    }
+    return $soldiers;
+  }
+
+}
+
+$commander = new Commander($army);
+$infantry = $commander->get(new SummonInfantry());
+$archers = $commander->get(new SummonArchers());
+
+var_dump($infantry); 
+var_dump($archers);
+```
 
